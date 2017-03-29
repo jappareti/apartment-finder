@@ -6,7 +6,7 @@ import os
 MIN_PRICE = 1500
 
 # The maximum rent you want to pay per month.
-MAX_PRICE = 2000
+MAX_PRICE = 2300
 
 ## Location preferences
 
@@ -19,6 +19,10 @@ CRAIGSLIST_SITE = 'sfbay'
 # For instance, https://sfbay.craigslist.org/eby/ is the East Bay, and https://sfbay.craigslist.org/sfc/ is San Francisco.
 # You only need the last three letters of the URLs.
 AREAS = ["eby", "sfc", "sby", "nby"]
+
+ZIP_CODE = 94609
+
+SEARCH_DISTANCE = 7
 
 # A list of neighborhoods and coordinates that you want to look for apartments in.  Any listing that has coordinates
 # attached will be checked to see which area it is in.  If there's a match, it will be annotated with the area
@@ -82,13 +86,15 @@ NEIGHBORHOODS = ["berkeley north", "berkeley", "rockridge", "adams point", "oakl
 # The farthest you want to live from a transit stop.
 MAX_TRANSIT_DIST = 2 # kilometers
 
+# The farthest you want to live from a transit stop in walking minutes. e.g. enter 15 for 15 min walk to transit
+MAX_TRANSIT_WALKING = 15
+
 # Transit stations you want to check against.  Every coordinate here will be checked against each listing,
 # and the closest station name will be added to the result and posted into Slack.
 TRANSIT_STATIONS = {
-    "oakland_19th_bart": [37.808364,-122.268633],
     "macarthur_bart": [37.829083,-122.267040],
     "rockridge_bart": [37.844700,-122.251397],
-    "downtown_berkeley_bart": [37.870089,-122.268132],
+    "ashby_bart": [37.852815,-122.269977],
     "north_berkeley_bart": [37.873954,-122.283420]
 }
 
@@ -107,12 +113,17 @@ CRAIGSLIST_HOUSING_SECTION = 'apa'
 # Too slow may miss listings.
 SLEEP_INTERVAL = 20 * 60 # 20 minutes
 
-# Which slack channel to post the listings into.
-SLACK_CHANNEL = "#housing"
+GMAPS_API_KEY = ''
 
-# The token that allows us to connect to slack.
-# Should be put in private.py, or set as an environment variable.
-SLACK_TOKEN = os.getenv('SLACK_TOKEN', "")
+# Go to airtable.com/account and generate a key
+AIRTABLE_API_KEY = ''
+
+# To find Base ID go to airtable.com/api and select the base. The base id is the URL, like this:
+# https://airtable.com/BASE_ID/api/docs
+AIRTABLE_BASE_ID = ''
+
+# In the Base, this is the table that the results should go to
+AIRTABLE_TABLE_NAME = '' 
 
 # Any private settings are imported here.
 try:

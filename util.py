@@ -1,5 +1,8 @@
+import datetime
+import googlemaps
 import settings
 import math
+import time
 
 def coord_distance(lat1, lon1, lat2, lon2):
     """
@@ -54,22 +57,44 @@ def find_points_of_interest(geotag, location):
     min_dist = None
     near_bart = False
     bart_dist = "N/A"
+    bart_walking_dist = 0
+    bart_station = ""
     bart = ""
+    gmaps = googlemaps.Client(key=settings.GMAPS_API_KEY)
+    now = datetime.datetime.now()
+    stations_dist = {}
+
     # Look to see if the listing is in any of the neighborhood boxes we defined.
     for a, coords in settings.BOXES.items():
         if in_box(geotag, coords):
             area = a
             area_found = True
 
-    # Check to see if the listing is near any transit stations.
-    for station, coords in settings.TRANSIT_STATIONS.items():
-        dist = coord_distance(coords[0], coords[1], geotag[0], geotag[1])
-        if (min_dist is None or dist < min_dist) and dist < settings.MAX_TRANSIT_DIST:
-            bart = station
-            near_bart = True
+    # Find the nearest transit station
+    for station, station_coords in settings.TRANSIT_STATIONS.items():
+        print("Looking up walking directions for " + str(geotag) + " to station " + str(station))
+        walking_directions_result = gmaps.directions(geotag, station_coords, mode='walking', arrival_time=now)
+        stations_dist[station] = walking_directions_result[0]['legs'][0]['duration']['value']
+    
+    closest_station = min(stations_dist, key=stations_dist.get)
+    closest_station_duration = round(stations_dist[closest_station] / 60, 2)
 
-        if (min_dist is None or dist < min_dist):
-            bart_dist = dist
+    # If the closest station in walking time is less than the walking time declared in settings
+    if closest_station_duration < settings.MAX_TRANSIT_WALKING:
+        near_bart = True
+        bart_walking_dist = closest_station_duration
+        bart_station = closest_station
+    else:
+        print("Not close enough to a bart station. It would take " + str(closest_station_duration) + " mins.")
+
+        #dist = coord_distance(coords[0], coords[1], geotag[0], geotag[1])
+        #print("distance to bart station: " + str(dist))
+        #if (min_dist is None or dist < min_dist) and dist < settings.MAX_TRANSIT_DIST:
+        #    bart = station
+        #    near_bart = True
+
+        #if (min_dist is None or dist < min_dist):
+        #    bart_dist = dist
 
     # If the listing isn't in any of the boxes we defined, check to see if the string description of the neighborhood
     # matches anything in our list of neighborhoods.
@@ -82,6 +107,6 @@ def find_points_of_interest(geotag, location):
         "area_found": area_found,
         "area": area,
         "near_bart": near_bart,
-        "bart_dist": bart_dist,
-        "bart": bart
+        "bart_walking_dist": bart_walking_dist,
+        "bart_station": bart_station
     }

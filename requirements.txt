@@ -3,3 +3,8 @@ sqlalchemy
 python-dateutil
 ipython
 slackclient
+datetime
+googlemaps
+airtable
+motionless
+bs4

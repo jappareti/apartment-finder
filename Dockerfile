@@ -27,6 +27,7 @@ RUN apt-get update && \
 
 RUN mkdir -p /tmp
 COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install setuptools==33.1.1
 RUN pip3 install -r /tmp/requirements.txt
 
 COPY deployment/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
