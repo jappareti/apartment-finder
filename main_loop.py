@@ -18,11 +18,4 @@ if __name__ == "__main__":
         else:
             print("{}: Successfully finished scraping".format(time.ctime()))
 
-        # Print countdown timer
-        for t in range(settings.SLEEP_INTERVAL,-1,-1):
-            minutes = t / 60
-            seconds = t % 60
-            print("Sleeping for %d:%02d" % (minutes,seconds), end='\r')
-            time.sleep(1.0)
-        #print("Sleeping for {} mins".format(settings.SLEEP_INTERVAL / 60))
         time.sleep(settings.SLEEP_INTERVAL)
