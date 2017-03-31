@@ -85,6 +85,7 @@ def scrape_area(area):
                 result["bart"] = ""
                 result["bart_station"] = ""
                 result["near_bart"] = False
+                result["photo"] = ""
 
             # Try parsing the price.
             price = 0
