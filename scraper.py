@@ -9,6 +9,7 @@ from slackclient import SlackClient
 from airtable import airtable
 from motionless import DecoratedMap, AddressMarker
 from bs4 import BeautifulSoup
+from random import randint
 import requests
 import time
 import settings
@@ -56,7 +57,13 @@ def scrape_area(area):
     gen = cl_h.get_results(sort_by='newest', geotagged=True, limit=20)
     while True:
         try:
+            
             result = next(gen)
+            # Random integer between 5 and 20 seconds
+            s = randint(5,20)
+            print("Getting next result in " + str(s) + " seconds...")
+            # Pause before getting another result to help avoid blockage from CL
+            time.sleep(s)
         except StopIteration:
             break
         except Exception:
